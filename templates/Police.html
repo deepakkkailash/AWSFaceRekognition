@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Police Database</title>
+    <link rel="stylesheet" href="pstyles.css">
+</head>
+<body style="background-color:black">
+    <div style="position:fixed;top:40%;left:30%;color:white">
+  <h1 style="font-size:1.5rem; font-family:cursive;">Hello Officer! Here is your webpage to upload the criminal's image </h1>
+  <form id="uploadform" action="/uploadedoffender" method="POST" enctype="multipart/form-data">
+    <input type="file" name="file" id="fileupload" required>
+    <input type="text" id="name" name="name" placeholder="Name" style="margin-left:-40px;margin-right:20px;border-radius:12px;padding:10px">
+    <input type="submit" value="submit"style="border-radius:10px;padding:5px">
+
+  </form>
+         </div>
+  <script>
+    document.getElementById("uploadform").onsubmit = function(event) {
+      event.preventDefault();
+      // Move the inputvalue declaration inside the event listener
+      let inputvalue = document.getElementById("name").value;
+
+      var formData = new FormData();
+      formData.append("file", document.getElementById("fileupload").files[0]); // corrected ID for file input
+      formData.append("inputvalue", inputvalue);
+
+      fetch("/uploadedoffender", {
+        method: "POST",
+        body: formData
+      })
+      .then(response => response.text()) // Assuming the server responds with text
+      .then(data => {
+        console.log(data); // Log the response from the server
+      });
+    };
+  </script>
+</body>
+</html>
