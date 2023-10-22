@@ -20,13 +20,11 @@ def create_response(image_binary):
     )
     found = False
     for match in response['FaceMatches']:
-        print(match['Face']['FaceId'], match['Face']['Confidence'])
-
+        #print(match['Face']['FaceId'], match['Face']['Confidence'])
         face = dynamodb.get_item(
             TableName='face_regontion',
             Key={'RekognitionId': {'S': match['Face']['FaceId']}}
         )
-
         if 'Item' in face:
             print("Found Offender: ", face['Item']['FullName']['S'])
             found = True

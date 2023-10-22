@@ -2,7 +2,7 @@ from flask import Flask, request, render_template
 import os
 from werkzeug.utils import secure_filename
 from Test import make_binary, create_response
-
+from s3userupload import upload_user_S3
 
 app = Flask(__name__)
 
@@ -26,6 +26,7 @@ def index():
 
 @app.route('/upload', methods=['POST'])
 def upload_file():
+    print(request.files)
     # Check if a file was submitted
     if 'file' not in request.files:
         return 'No file part'
@@ -42,6 +43,7 @@ def upload_file():
         #The below code first uploads the uploaded image locally onto the system and then calls the function make_binary that makes sure that the image is converted into b
         #binary format and then it returns the binary image onto temp. Now with create_response(temp) the response is created
         file.save(os.path.join(app.config['UPLOAD_FOLDER'], filename))
+        upload_user_S3("UserUploads/"+filename)
         temp = make_binary("UserUploads/"+filename)
         val = create_response(temp)
         return render_template("output.html",output=val)
